@@ -79,13 +79,18 @@ class AuthService extends GetxService {
       UserCredential userCredential = await _auth.signInWithCredential(credential);
       
       // Create or update user in Firestore
-      if (userCredential.user != null) {
-        await _firestoreService.createOrUpdateUser(
-          uid: userCredential.user!.uid,
-          phoneNumber: userCredential.user!.phoneNumber,
-          provider: 'phone',
-        );
-      }
+      // Create or update user in Firestore (fire-and-forget)
+if (userCredential.user != null) {
+  _firestoreService.createOrUpdateUser(  // ← Sin await
+    uid: userCredential. user!.uid,
+    email: userCredential.user!. email,
+    displayName: userCredential.user!.displayName,
+    photoURL: userCredential.user!.photoURL,
+    provider: 'google',
+  ).catchError((e) {
+    debugPrint('Error creating user in Firestore: $e');
+  });
+}
       
       return userCredential;
     } catch (e) {
@@ -118,14 +123,18 @@ class AuthService extends GetxService {
       UserCredential userCredential = await _auth.signInWithCredential(credential);
       
       // Create or update user in Firestore
+      // Create or update user in Firestore
+// Create or update user in Firestore (fire-and-forget)
       if (userCredential.user != null) {
-        await _firestoreService.createOrUpdateUser(
-          uid: userCredential.user!.uid,
-          email: userCredential.user!.email,
+        _firestoreService.createOrUpdateUser(  // ← Sin await
+          uid: userCredential. user!.uid,
+          email: userCredential.user!. email,
           displayName: userCredential.user!.displayName,
           photoURL: userCredential.user!.photoURL,
           provider: 'google',
-        );
+        ).catchError((e) {
+          debugPrint('Error creating user in Firestore: $e');
+        });
       }
       
       return userCredential;
@@ -155,15 +164,18 @@ class AuthService extends GetxService {
           await _auth.signInWithCredential(facebookAuthCredential);
       
       // Create or update user in Firestore
-      if (userCredential.user != null) {
-        await _firestoreService.createOrUpdateUser(
-          uid: userCredential.user!.uid,
-          email: userCredential.user!.email,
-          displayName: userCredential.user!.displayName,
-          photoURL: userCredential.user!.photoURL,
-          provider: 'facebook',
-        );
-      }
+      // Create or update user in Firestore (fire-and-forget)
+if (userCredential.user != null) {
+  _firestoreService.createOrUpdateUser(  // ← Sin await
+    uid: userCredential. user!.uid,
+    email: userCredential.user!. email,
+    displayName: userCredential.user!.displayName,
+    photoURL: userCredential.user!.photoURL,
+    provider: 'google',
+  ).catchError((e) {
+    debugPrint('Error creating user in Firestore: $e');
+  });
+}
       
       return userCredential;
     } catch (e) {

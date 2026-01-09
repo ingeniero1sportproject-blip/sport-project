@@ -80,7 +80,7 @@ firebase_core: ^3.8.1          # Core Firebase SDK
 firebase_auth: ^5.3.4          # Authentication
 cloud_firestore: ^5.5.2        # Database
 google_sign_in: ^6.2.3         # Google OAuth
-flutter_facebook_auth: ^7.2.0  # Facebook OAuth
+flutter_facebook_auth: ^7.1.5  # Facebook OAuth
 intl_phone_field: ^3.2.0       # Phone number input
 ```
 

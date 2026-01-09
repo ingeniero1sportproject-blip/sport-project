@@ -200,7 +200,7 @@ firebase_core: ^3.8.1
 firebase_auth: ^5.3.4
 cloud_firestore: ^5.5.2
 google_sign_in: ^6.2.3
-flutter_facebook_auth: ^7.2.0
+flutter_facebook_auth: ^7.1.5
 intl_phone_field: ^3.2.0
 ```
 

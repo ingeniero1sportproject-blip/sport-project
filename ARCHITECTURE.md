@@ -251,7 +251,7 @@ google_sign_in (6.2.3)
   ├── Depends on: google_sign_in_platform_interface
   └── Provides: Google OAuth
 
-flutter_facebook_auth (7.2.0)
+flutter_facebook_auth (7.1.5)
   ├── Depends on: flutter_facebook_auth_platform_interface
   └── Provides: Facebook OAuth
 
