@@ -186,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Logo
                   Center(
                     child: CustomImageView(
-                      imagePath: ImageConstant.imgRectangle712,
+                      svgPath: ImageConstant.imgGroup,
                       height: getSize(120),
                       width: getSize(120),
                     ),

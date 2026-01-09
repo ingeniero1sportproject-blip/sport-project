@@ -25,7 +25,7 @@ class SplashController extends GetxController {
       if (isIntro) {
         Get.toNamed(AppRoutes.onboardingOneScreen);
       } else if (isSignIn) {
-        Get.toNamed(AppRoutes.loginFilledTabContainerScreen);
+        Get.toNamed(AppRoutes.firebaseLoginScreen);
       } else {
         Get.toNamed(AppRoutes.homeContainerScreen);
       }
