@@ -54,6 +54,12 @@ import 'package:page_transition/page_transition.dart';
 import 'package:gym_app/screens/auth/login_screen.dart';
 import 'package:gym_app/screens/auth/otp_verification_screen.dart';
 
+// Onboarding Screens
+import 'package:gym_app/screens/onboarding/sport_selection_screen.dart';
+import 'package:gym_app/screens/onboarding/gender_selection_screen.dart';
+import 'package:gym_app/screens/onboarding/measurements_screen.dart';
+import 'package:gym_app/screens/onboarding/photo_upload_screen.dart';
+
 import '../presentation/challenges_page/challenges_page.dart';
 import '../presentation/chest_gym_exercise_page/chest_gym_exercise_page.dart';
 import '../presentation/chest_home_exercise_page/chest_home_exercise_page.dart';
@@ -222,6 +228,13 @@ class AppRoutes {
 
   static const String appNavigationScreen = '/app_navigation_screen';
 
+  // Onboarding routes
+  static const String sportSelectionScreen = '/sport_selection_screen';
+  static const String genderSelectionScreen = '/gender_selection_screen';
+  static const String measurementsScreen = '/measurements_screen';
+  static const String photoUploadScreen = '/photo_upload_screen';
+
+
   static const String initialRoute = '/initialRoute';
 
 
@@ -368,6 +381,14 @@ class AppRoutes {
         return getPage(ConfirmPaymentScreen(), settings);
       case AppRoutes.appNavigationScreen:
         return getPage(AppNavigationScreen(), settings);
+      case AppRoutes.sportSelectionScreen:
+        return getPage(SportSelectionScreen(), settings);
+      case AppRoutes.genderSelectionScreen:
+        return getPage(GenderSelectionScreen(selectedSports: []), settings);
+      case AppRoutes.measurementsScreen:
+        return getPage(MeasurementsScreen(selectedSports: [], selectedGender: ''), settings);
+      case AppRoutes.photoUploadScreen:
+        return getPage(PhotoUploadScreen(selectedSports: [], selectedGender: '', height: {}, weight: {}), settings);
       case AppRoutes.initialRoute:
         return getPage(SplashScreen(), settings);
       default:

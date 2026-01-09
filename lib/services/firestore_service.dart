@@ -93,4 +93,19 @@ class FirestoreService {
       rethrow;
     }
   }
+
+  // Check if onboarding is completed
+  Future<bool> isOnboardingCompleted(String uid) async {
+    try {
+      DocumentSnapshot doc = await usersCollection.doc(uid).get();
+      if (doc.exists) {
+        Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+        return data?['onboardingCompleted'] == true;
+      }
+      return false;
+    } catch (e) {
+      debugPrint('Error checking onboarding status: $e');
+      return false;
+    }
+  }
 }

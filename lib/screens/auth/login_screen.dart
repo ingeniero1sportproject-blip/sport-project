@@ -5,6 +5,7 @@ import '../../services/auth_service.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
 import 'otp_verification_screen.dart';
+import '../onboarding/sport_selection_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key?  key}) : super(key: key);
@@ -98,13 +99,21 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       if (userCredential != null) {
+        // Check onboarding status
+        bool onboardingCompleted = await _authService.checkOnboardingStatus();
+        
         Get.snackbar(
           'Success',
           'Signed in successfully',
           backgroundColor:  Colors.green,
           colorText: Colors.white,
         );
-        Get.offAllNamed(AppRoutes.homeContainerScreen);
+        
+        if (onboardingCompleted) {
+          Get.offAllNamed(AppRoutes.homeContainerScreen);
+        } else {
+          Get.offAll(() => const SportSelectionScreen());
+        }
       } else {
         Get.snackbar(
           'Cancelled',
@@ -139,13 +148,21 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       if (userCredential != null) {
+        // Check onboarding status
+        bool onboardingCompleted = await _authService.checkOnboardingStatus();
+        
         Get.snackbar(
           'Success',
           'Signed in successfully',
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
-        Get.offAllNamed(AppRoutes.homeContainerScreen);
+        
+        if (onboardingCompleted) {
+          Get.offAllNamed(AppRoutes.homeContainerScreen);
+        } else {
+          Get.offAll(() => const SportSelectionScreen());
+        }
       } else {
         Get.snackbar(
           'Cancelled',

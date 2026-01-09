@@ -4,6 +4,7 @@ import 'package:pinput/pinput.dart';
 import '../../services/auth_service.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
+import '../onboarding/sport_selection_screen.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
   final String phoneNumber;
@@ -53,8 +54,15 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
       // NO hagas setState aquí - navega directamente
       if (userCredential != null) {
-        // Navegar primero
-        Get.offAllNamed(AppRoutes.homeContainerScreen);
+        // Check onboarding status
+        bool onboardingCompleted = await _authService.checkOnboardingStatus();
+        
+        // Navigate based on onboarding status
+        if (onboardingCompleted) {
+          Get.offAllNamed(AppRoutes.homeContainerScreen);
+        } else {
+          Get.offAll(() => const SportSelectionScreen());
+        }
         
         // Mostrar mensaje después (opcional)
         Future.delayed(const Duration(milliseconds: 300), () {

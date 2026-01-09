@@ -196,4 +196,11 @@ class AuthService extends GetxService {
   Future<bool> isPhoneNumberRegistered(String phoneNumber) async {
     return await _firestoreService.isPhoneNumberRegistered(phoneNumber);
   }
+
+  // Check onboarding status
+  Future<bool> checkOnboardingStatus() async {
+    User? user = currentUser;
+    if (user == null) return false;
+    return await _firestoreService.isOnboardingCompleted(user.uid);
+  }
 }
