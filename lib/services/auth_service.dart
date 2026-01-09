@@ -33,18 +33,21 @@ class AuthService extends GetxService {
   }) async {
     try {
       await _auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
+        phoneNumber:  phoneNumber,
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
           // Auto-verification (Android only)
           try {
             UserCredential userCredential = await _auth.signInWithCredential(credential);
             if (userCredential.user != null) {
-              await _firestoreService.createOrUpdateUser(
+              // Fire-and-forget for auto-verification
+              _firestoreService.createOrUpdateUser(
                 uid: userCredential.user!.uid,
-                phoneNumber: userCredential.user!.phoneNumber,
+                phoneNumber: userCredential. user!.phoneNumber,
                 provider: 'phone',
-              );
+              ).catchError((e) {
+                debugPrint('Error creating user in Firestore (auto-verify): $e');
+              });
             }
           } catch (e) {
             debugPrint('Error in auto-verification: $e');
@@ -78,21 +81,18 @@ class AuthService extends GetxService {
       
       UserCredential userCredential = await _auth.signInWithCredential(credential);
       
-      // Create or update user in Firestore
-      // Create or update user in Firestore (fire-and-forget)
-if (userCredential.user != null) {
-  _firestoreService.createOrUpdateUser(  // ← Sin await
-    uid: userCredential. user!.uid,
-    email: userCredential.user!. email,
-    displayName: userCredential.user!.displayName,
-    photoURL: userCredential.user!.photoURL,
-    provider: 'google',
-  ).catchError((e) {
-    debugPrint('Error creating user in Firestore: $e');
-  });
-}
+      // Create or update user in Firestore (fire-and-forget, NO await)
+      if (userCredential.user != null) {
+        _firestoreService.createOrUpdateUser(
+          uid: userCredential.user!.uid,
+          phoneNumber: userCredential.user!. phoneNumber,
+          provider: 'phone',
+        ).catchError((e) {
+          debugPrint('Error creating user in Firestore: $e');
+        });
+      }
       
-      return userCredential;
+      return userCredential;  // ← Retorna inmediatamente
     } catch (e) {
       debugPrint('Error verifying OTP: $e');
       return null;
@@ -103,7 +103,7 @@ if (userCredential.user != null) {
   Future<UserCredential?> signInWithGoogle() async {
     try {
       // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser = await _googleSignIn. signIn();
       
       if (googleUser == null) {
         // User cancelled the sign-in
@@ -114,7 +114,7 @@ if (userCredential.user != null) {
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       
       // Create a new credential
-      final credential = GoogleAuthProvider.credential(
+      final credential = GoogleAuthProvider. credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
@@ -122,14 +122,12 @@ if (userCredential.user != null) {
       // Sign in to Firebase with the Google credential
       UserCredential userCredential = await _auth.signInWithCredential(credential);
       
-      // Create or update user in Firestore
-      // Create or update user in Firestore
-// Create or update user in Firestore (fire-and-forget)
+      // Create or update user in Firestore (fire-and-forget, NO await)
       if (userCredential.user != null) {
-        _firestoreService.createOrUpdateUser(  // ← Sin await
-          uid: userCredential. user!.uid,
-          email: userCredential.user!. email,
-          displayName: userCredential.user!.displayName,
+        _firestoreService. createOrUpdateUser(
+          uid: userCredential.user!. uid,
+          email: userCredential.user!.email,
+          displayName: userCredential. user!.displayName,
           photoURL: userCredential.user!.photoURL,
           provider: 'google',
         ).catchError((e) {
@@ -137,7 +135,7 @@ if (userCredential.user != null) {
         });
       }
       
-      return userCredential;
+      return userCredential;  // ← Retorna inmediatamente
     } catch (e) {
       debugPrint('Error signing in with Google: $e');
       return null;
@@ -157,27 +155,26 @@ if (userCredential.user != null) {
       
       // Create a credential from the access token
       final OAuthCredential facebookAuthCredential = 
-          FacebookAuthProvider.credential(result.accessToken!.tokenString);
+          FacebookAuthProvider.credential(result.accessToken! .tokenString);
       
       // Sign in to Firebase with the Facebook credential
       UserCredential userCredential = 
           await _auth.signInWithCredential(facebookAuthCredential);
       
-      // Create or update user in Firestore
-      // Create or update user in Firestore (fire-and-forget)
-if (userCredential.user != null) {
-  _firestoreService.createOrUpdateUser(  // ← Sin await
-    uid: userCredential. user!.uid,
-    email: userCredential.user!. email,
-    displayName: userCredential.user!.displayName,
-    photoURL: userCredential.user!.photoURL,
-    provider: 'google',
-  ).catchError((e) {
-    debugPrint('Error creating user in Firestore: $e');
-  });
-}
+      // Create or update user in Firestore (fire-and-forget, NO await)
+      if (userCredential.user != null) {
+        _firestoreService.createOrUpdateUser(
+          uid: userCredential.user!.uid,
+          email: userCredential. user!.email,
+          displayName: userCredential.user! .displayName,
+          photoURL: userCredential.user!. photoURL,
+          provider: 'facebook',  // ← Corregido a 'facebook'
+        ).catchError((e) {
+          debugPrint('Error creating user in Firestore: $e');
+        });
+      }
       
-      return userCredential;
+      return userCredential;  // ← Retorna inmediatamente
     } catch (e) {
       debugPrint('Error signing in with Facebook: $e');
       return null;

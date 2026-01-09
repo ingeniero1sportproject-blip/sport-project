@@ -11,8 +11,8 @@ class OTPVerificationScreen extends StatefulWidget {
 
   const OTPVerificationScreen({
     Key? key,
-    required this.phoneNumber,
-    required this.verificationId,
+    required this. phoneNumber,
+    required this. verificationId,
   }) : super(key: key);
 
   @override
@@ -20,7 +20,7 @@ class OTPVerificationScreen extends StatefulWidget {
 }
 
 class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
-  final AuthService _authService = Get.find<AuthService>();
+  final AuthService _authService = Get. find<AuthService>();
   final TextEditingController _otpController = TextEditingController();
   bool _isLoading = false;
 
@@ -35,7 +35,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       Get.snackbar(
         'Error',
         'Please enter a valid 6-digit code',
-        backgroundColor: Colors.red,
+        backgroundColor:  Colors.red,
         colorText: Colors.white,
       );
       return;
@@ -46,26 +46,33 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     });
 
     try {
-      final userCredential = await _authService.verifyOTP(
+      final userCredential = await _authService. verifyOTP(
         _otpController.text,
         widget.verificationId,
       );
 
-      setState(() {
-        _isLoading = false;
-      });
-
+      // NO hagas setState aquí - navega directamente
       if (userCredential != null) {
-        Get.snackbar(
-          'Success',
-          'Verification successful',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
-        
-        // Navigate to home screen
+        // Navegar primero
         Get.offAllNamed(AppRoutes.homeContainerScreen);
+        
+        // Mostrar mensaje después (opcional)
+        Future.delayed(const Duration(milliseconds: 300), () {
+          Get.snackbar(
+            'Success',
+            'Verification successful',
+            backgroundColor: Colors. green,
+            colorText: Colors.white,
+          );
+        });
       } else {
+        // Solo aquí hacemos setState si falla
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+        
         Get.snackbar(
           'Error',
           'Invalid verification code',
@@ -74,9 +81,13 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         );
       }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      // Solo setState si hay error
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+      
       Get.snackbar(
         'Error',
         'Verification failed: $e',
@@ -102,7 +113,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           Get.snackbar(
             'Success',
             'Verification code sent',
-            backgroundColor: Colors.green,
+            backgroundColor:  Colors.green,
             colorText: Colors.white,
           );
           
@@ -119,7 +130,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           Get.snackbar(
             'Error',
             error,
-            backgroundColor: Colors.red,
+            backgroundColor:  Colors.red,
             colorText: Colors.white,
           );
         },
@@ -145,6 +156,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       textStyle: const TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.w600,
+        color: Colors.black,  // ← Color del texto
       ),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey[300]!),
@@ -153,7 +165,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     );
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: theme.colorScheme.primary),
+      border: Border.all(color: theme.colorScheme. primary),
       borderRadius: BorderRadius.circular(8),
     );
 
@@ -164,18 +176,18 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     );
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.onErrorContainer,
+      backgroundColor: theme. colorScheme.onErrorContainer,
       appBar: AppBar(
         backgroundColor: theme.colorScheme.onErrorContainer,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon:  const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
         ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
+          child:  Padding(
             padding: getPadding(all: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -186,7 +198,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 // Title
                 Text(
                   'Verification Code',
-                  style: theme.textTheme.headlineLarge?.copyWith(
+                  style:  theme.textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
@@ -196,7 +208,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 
                 Text(
                   'We sent a verification code to',
-                  style: theme.textTheme.bodyLarge?.copyWith(
+                  style: theme.textTheme. bodyLarge?.copyWith(
                     color: Colors.grey,
                   ),
                   textAlign: TextAlign.center,
@@ -206,10 +218,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 
                 Text(
                   widget.phoneNumber,
-                  style: theme.textTheme.bodyLarge?.copyWith(
+                  style: theme. textTheme.bodyLarge?. copyWith(
                     fontWeight: FontWeight.bold,
                   ),
-                  textAlign: TextAlign.center,
+                  textAlign:  TextAlign.center,
                 ),
                 
                 SizedBox(height: getVerticalSize(40)),
@@ -230,10 +242,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 // Verify button
                 CustomElevatedButton(
                   height: getVerticalSize(54),
-                  text: _isLoading ? 'VERIFYING...' : 'VERIFY',
+                  text: _isLoading ? 'VERIFYING.. .' : 'VERIFY',
                   buttonStyle: CustomButtonStyles.fillPrimary,
                   buttonTextStyle: CustomTextStyles.bodyLargeUniformProExtraCondensedOnErrorContainer,
-                  onTap: _isLoading ? null : _verifyOTP,
+                  onTap:  _isLoading ? null : _verifyOTP,
                 ),
                 
                 SizedBox(height: getVerticalSize(24)),
@@ -250,11 +262,11 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     ),
                     GestureDetector(
                       onTap: _isLoading ? null : _resendOTP,
-                      child: Text(
+                      child:  Text(
                         'Resend',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme. primary,
+                          fontWeight:  FontWeight.bold,
                         ),
                       ),
                     ),
