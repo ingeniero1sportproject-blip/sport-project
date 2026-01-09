@@ -89,15 +89,17 @@ class _MeasurementsScreenState extends State<MeasurementsScreen> {
       return;
     }
 
-    // Prepare height and weight data
+    // Prepare height and weight data (normalized to cm and kg)
     Map<String, dynamic> height = {
-      'value': _heightUnit == 'cm' ? _heightCm : '$_heightFeet\'$_heightInches"',
-      'unit': _heightUnit,
+      'value': _heightCm,
+      'unit': 'cm',
+      'displayUnit': _heightUnit, // Store preferred display unit
     };
 
     Map<String, dynamic> weight = {
-      'value': _weightUnit == 'kg' ? _weightKg : _weightLbs,
-      'unit': _weightUnit,
+      'value': _weightKg,
+      'unit': 'kg',
+      'displayUnit': _weightUnit, // Store preferred display unit
     };
 
     // Navigate to photo upload screen

@@ -17,7 +17,7 @@ class OnboardingService {
     List<String>? photoUrls,
   }) async {
     try {
-      await _firestore.collection('users').doc(uid).update({
+      await _firestore.collection('users').doc(uid).set({
         'onboardingCompleted': true,
         'sports': sports,
         'gender': gender,
@@ -25,26 +25,10 @@ class OnboardingService {
         'weight': weight,
         'profilePhotos': photoUrls ?? [],
         'profileCompletedAt': FieldValue.serverTimestamp(),
-      });
+      }, SetOptions(merge: true));
     } catch (e) {
       debugPrint('Error saving onboarding data: $e');
       rethrow;
-    }
-  }
-
-  // Check if onboarding is completed
-  Future<bool> isOnboardingCompleted(String uid) async {
-    try {
-      DocumentSnapshot doc =
-          await _firestore.collection('users').doc(uid).get();
-      if (doc.exists) {
-        Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
-        return data?['onboardingCompleted'] == true;
-      }
-      return false;
-    } catch (e) {
-      debugPrint('Error checking onboarding status: $e');
-      return false;
     }
   }
 

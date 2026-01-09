@@ -184,14 +184,12 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
 
       Get.offAllNamed(AppRoutes.homeContainerScreen);
 
-      Future.delayed(const Duration(milliseconds: 300), () {
-        Get.snackbar(
-          'Success',
-          'Profile setup complete!',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
-      });
+      Get.snackbar(
+        'Success',
+        'Profile setup complete!',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
     } catch (e) {
       debugPrint('Error completing onboarding: $e');
 
