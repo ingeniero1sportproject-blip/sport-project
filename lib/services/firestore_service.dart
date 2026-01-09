@@ -13,7 +13,7 @@ class FirestoreService {
     String? phoneNumber,
     String? email,
     String? displayName,
-    String? photoURL,
+    String?  photoURL,
     required String provider,
   }) async {
     try {
@@ -23,14 +23,14 @@ class FirestoreService {
       if (doc.exists) {
         // Update existing user
         await userDoc.update({
-          'lastLogin': FieldValue.serverTimestamp(),
+          'lastLogin': FieldValue. serverTimestamp(),
           if (phoneNumber != null) 'phoneNumber': phoneNumber,
           if (email != null) 'email': email,
           if (displayName != null) 'displayName': displayName,
           if (photoURL != null) 'photoURL': photoURL,
         });
       } else {
-        // Create new user
+        // Create new user - ESTABLECER onboardingCompleted: false
         await userDoc.set({
           'uid': uid,
           'phoneNumber': phoneNumber,
@@ -38,12 +38,13 @@ class FirestoreService {
           'displayName': displayName,
           'photoURL': photoURL,
           'provider': provider,
-          'createdAt': FieldValue.serverTimestamp(),
+          'onboardingCompleted': false,  // ← Campo crítico
+          'createdAt':  FieldValue.serverTimestamp(),
           'lastLogin': FieldValue.serverTimestamp(),
         });
       }
     } catch (e) {
-      debugPrint('Error creating/updating user: $e');
+      debugPrint('Error creating/updating user:  $e');
       rethrow;
     }
   }
@@ -52,7 +53,7 @@ class FirestoreService {
   Future<bool> isPhoneNumberRegistered(String phoneNumber) async {
     try {
       QuerySnapshot querySnapshot = await usersCollection
-          .where('phoneNumber', isEqualTo: phoneNumber)
+          . where('phoneNumber', isEqualTo: phoneNumber)
           .limit(1)
           .get();
       
@@ -106,6 +107,33 @@ class FirestoreService {
     } catch (e) {
       debugPrint('Error checking onboarding status: $e');
       return false;
+    }
+  }
+
+  // Save onboarding data and mark as completed
+  // Este método se llamará al FINAL del flujo de onboarding
+  Future<void> saveOnboardingData({
+    required String uid,
+    required List<String> sports,
+    required String gender,
+    required Map<String, dynamic> height,
+    required Map<String, dynamic> weight,
+    List<String>? profilePhotos,
+  }) async {
+    try {
+      await usersCollection.doc(uid).update({
+        'sports': sports,
+        'gender': gender,
+        'height': height,
+        'weight': weight,
+        'profilePhotos': profilePhotos ??  [],
+        'onboardingCompleted': true,  // ← SOLO AQUÍ se pone en true
+        'profileCompletedAt': FieldValue. serverTimestamp(),
+      });
+      debugPrint('✅ Onboarding data saved successfully');
+    } catch (e) {
+      debugPrint('❌ Error saving onboarding data: $e');
+      rethrow;
     }
   }
 }

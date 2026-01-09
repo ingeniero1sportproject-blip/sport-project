@@ -32,64 +32,41 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   }
 
   Future<void> _verifyOTP() async {
-    if (_otpController.text.length != 6) {
-      Get.snackbar(
-        'Error',
-        'Please enter a valid 6-digit code',
-        backgroundColor:  Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
+  if (_otpController. text.length != 6) {
+    Get.snackbar(
+      'Error',
+      'Please enter a valid 6-digit code',
+      backgroundColor:  Colors.red,
+      colorText: Colors.white,
+    );
+    return;
+  }
 
-    setState(() {
-      _isLoading = true;
-    });
+  setState(() {
+    _isLoading = true;
+  });
 
-    try {
-      final userCredential = await _authService. verifyOTP(
-        _otpController.text,
-        widget.verificationId,
-      );
+  try {
+    final userCredential = await _authService. verifyOTP(
+      _otpController.text,
+      widget.verificationId,
+    );
 
-      // NO hagas setState aquí - navega directamente
-      if (userCredential != null) {
-        // Check onboarding status
-        bool onboardingCompleted = await _authService.checkOnboardingStatus();
-        
-        // Navigate based on onboarding status
-        if (onboardingCompleted) {
-          Get.offAllNamed(AppRoutes.homeContainerScreen);
-        } else {
-          Get.offAll(() => const SportSelectionScreen());
-        }
-        
-        // Mostrar mensaje después (opcional)
-        Future.delayed(const Duration(milliseconds: 300), () {
-          Get.snackbar(
-            'Success',
-            'Verification successful',
-            backgroundColor: Colors. green,
-            colorText: Colors.white,
-          );
-        });
-      } else {
-        // Solo aquí hacemos setState si falla
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-        
+    if (userCredential != null) {
+      // 🚀 Navega INMEDIATAMENTE a deportes (siempre)
+      // La pantalla de deportes verificará si debe saltar al home
+      Get.offAll(() => const SportSelectionScreen());
+      
+      // Mostrar mensaje después
+      Future.delayed(const Duration(milliseconds: 300), () {
         Get.snackbar(
-          'Error',
-          'Invalid verification code',
-          backgroundColor: Colors.red,
+          'Success',
+          'Verification successful',
+          backgroundColor:  Colors.green,
           colorText: Colors.white,
         );
-      }
-    } catch (e) {
-      // Solo setState si hay error
+      });
+    } else {
       if (mounted) {
         setState(() {
           _isLoading = false;
@@ -98,12 +75,26 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       
       Get.snackbar(
         'Error',
-        'Verification failed: $e',
+        'Invalid verification code',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
     }
+  } catch (e) {
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    
+    Get.snackbar(
+      'Error',
+      'Verification failed: $e',
+      backgroundColor: Colors.red,
+      colorText: Colors. white,
+    );
   }
+}
 
   Future<void> _resendOTP() async {
     setState(() {

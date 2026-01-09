@@ -43,7 +43,7 @@ class AuthService extends GetxService {
               // Fire-and-forget for auto-verification
               _firestoreService.createOrUpdateUser(
                 uid: userCredential.user!.uid,
-                phoneNumber: userCredential. user!.phoneNumber,
+                phoneNumber: userCredential. user! . phoneNumber,
                 provider: 'phone',
               ).catchError((e) {
                 debugPrint('Error creating user in Firestore (auto-verify): $e');
@@ -66,7 +66,7 @@ class AuthService extends GetxService {
       );
       return true;
     } catch (e) {
-      onError(e.toString());
+      onError(e. toString());
       return false;
     }
   }
@@ -92,7 +92,7 @@ class AuthService extends GetxService {
         });
       }
       
-      return userCredential;  // ← Retorna inmediatamente
+      return userCredential;
     } catch (e) {
       debugPrint('Error verifying OTP: $e');
       return null;
@@ -102,32 +102,26 @@ class AuthService extends GetxService {
   // Google Sign In
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await _googleSignIn. signIn();
       
       if (googleUser == null) {
-        // User cancelled the sign-in
         return null;
       }
       
-      // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       
-      // Create a new credential
-      final credential = GoogleAuthProvider. credential(
+      final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+        idToken: googleAuth. idToken,
       );
       
-      // Sign in to Firebase with the Google credential
       UserCredential userCredential = await _auth.signInWithCredential(credential);
       
-      // Create or update user in Firestore (fire-and-forget, NO await)
       if (userCredential.user != null) {
-        _firestoreService. createOrUpdateUser(
-          uid: userCredential.user!. uid,
+        _firestoreService.createOrUpdateUser(
+          uid: userCredential.user!.uid,
           email: userCredential.user!.email,
-          displayName: userCredential. user!.displayName,
+          displayName: userCredential.user!.displayName,
           photoURL: userCredential.user!.photoURL,
           provider: 'google',
         ).catchError((e) {
@@ -135,7 +129,7 @@ class AuthService extends GetxService {
         });
       }
       
-      return userCredential;  // ← Retorna inmediatamente
+      return userCredential;
     } catch (e) {
       debugPrint('Error signing in with Google: $e');
       return null;
@@ -145,38 +139,33 @@ class AuthService extends GetxService {
   // Facebook Sign In
   Future<UserCredential?> signInWithFacebook() async {
     try {
-      // Trigger the Facebook authentication flow
-      final LoginResult result = await FacebookAuth.instance.login();
+      final LoginResult result = await FacebookAuth. instance.login();
       
       if (result.status != LoginStatus.success) {
-        // User cancelled or error occurred
         return null;
       }
       
-      // Create a credential from the access token
       final OAuthCredential facebookAuthCredential = 
           FacebookAuthProvider.credential(result.accessToken! .tokenString);
       
-      // Sign in to Firebase with the Facebook credential
       UserCredential userCredential = 
           await _auth.signInWithCredential(facebookAuthCredential);
       
-      // Create or update user in Firestore (fire-and-forget, NO await)
       if (userCredential.user != null) {
         _firestoreService.createOrUpdateUser(
-          uid: userCredential.user!.uid,
-          email: userCredential. user!.email,
+          uid: userCredential.user! .uid,
+          email: userCredential.user!.email,
           displayName: userCredential.user! .displayName,
           photoURL: userCredential.user!. photoURL,
-          provider: 'facebook',  // ← Corregido a 'facebook'
+          provider: 'facebook',
         ).catchError((e) {
           debugPrint('Error creating user in Firestore: $e');
         });
       }
       
-      return userCredential;  // ← Retorna inmediatamente
+      return userCredential;
     } catch (e) {
-      debugPrint('Error signing in with Facebook: $e');
+      debugPrint('Error signing in with Facebook:  $e');
       return null;
     }
   }
@@ -186,7 +175,7 @@ class AuthService extends GetxService {
     try {
       await _auth.signOut();
       await _googleSignIn.signOut();
-      await FacebookAuth.instance.logOut();
+      await FacebookAuth.instance. logOut();
     } catch (e) {
       debugPrint('Error signing out: $e');
     }
@@ -201,6 +190,6 @@ class AuthService extends GetxService {
   Future<bool> checkOnboardingStatus() async {
     User? user = currentUser;
     if (user == null) return false;
-    return await _firestoreService.isOnboardingCompleted(user.uid);
+    return await _firestoreService.isOnboardingCompleted(user. uid);
   }
 }

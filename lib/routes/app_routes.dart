@@ -94,6 +94,8 @@ class AppRoutes {
 
   static const String loginFilledPage = '/login_filled_page';
 
+  static const String sportSelectionScreen = '/sport_selection_screen';
+
   static const String loginFilledTabContainerScreen =
       '/login_filled_tab_container_screen';
 
@@ -229,7 +231,6 @@ class AppRoutes {
   static const String appNavigationScreen = '/app_navigation_screen';
 
   // Onboarding routes
-  static const String sportSelectionScreen = '/sport_selection_screen';
   static const String genderSelectionScreen = '/gender_selection_screen';
   static const String measurementsScreen = '/measurements_screen';
   static const String photoUploadScreen = '/photo_upload_screen';

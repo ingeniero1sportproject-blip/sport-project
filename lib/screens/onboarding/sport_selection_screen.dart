@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
+import '../../services/auth_service.dart';  // ← Importar AuthService
 import 'gender_selection_screen.dart';
 
 class SportSelectionScreen extends StatefulWidget {
@@ -16,15 +17,40 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
 
   final List<Map<String, dynamic>> _sports = [
     {'name': 'Football', 'emoji': '⚽', 'icon': Icons.sports_soccer},
-    {'name': 'Basketball', 'emoji': '🏀', 'icon': Icons.sports_basketball},
+    {'name': 'Basketball', 'emoji': '🏀', 'icon':  Icons.sports_basketball},
     {'name': 'Tennis', 'emoji': '🎾', 'icon': Icons.sports_tennis},
-    {'name': 'Running', 'emoji': '🏃', 'icon': Icons.directions_run},
+    {'name': 'Running', 'emoji': '🏃', 'icon':  Icons.directions_run},
     {'name': 'Gym/Fitness', 'emoji': '💪', 'icon': Icons.fitness_center},
     {'name': 'Cycling', 'emoji': '🚴', 'icon': Icons.directions_bike},
-    {'name': 'Swimming', 'emoji': '🏊', 'icon': Icons.pool},
+    {'name': 'Swimming', 'emoji': '🏊', 'icon':  Icons.pool},
     {'name': 'Yoga', 'emoji': '🧘', 'icon': Icons.self_improvement},
-    {'name': 'Other', 'emoji': '➕', 'icon': Icons.add_circle_outline},
+    {'name': 'Other', 'emoji': '➕', 'icon': Icons. add_circle_outline},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _checkOnboardingStatus();
+  }
+
+  Future<void> _checkOnboardingStatus() async {
+    // Hacer el check en background sin bloquear la UI
+    try {
+      final authService = Get.find<AuthService>();
+      final onboardingCompleted = await authService.checkOnboardingStatus();
+      
+      if (onboardingCompleted && mounted) {
+        // Si ya completó onboarding, saltar al home
+        debugPrint('✅ Onboarding already completed, redirecting to home');
+        Get.offAllNamed(AppRoutes.homeContainerScreen);
+      } else {
+        debugPrint('🔵 Onboarding not completed, staying on sport selection');
+      }
+    } catch (e) {
+      debugPrint('⚠️ Error checking onboarding status: $e');
+      // Si falla, dejar que continúe con onboarding
+    }
+  }
 
   void _toggleSport(String sport) {
     setState(() {
@@ -42,10 +68,12 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
         'Selection Required',
         'Please select at least one sport',
         backgroundColor: Colors.orange,
-        colorText: Colors.white,
+        colorText: Colors. white,
       );
       return;
     }
+
+    debugPrint('🔵 Selected sports: $_selectedSports');
 
     // Navigate to gender selection
     Get.to(() => GenderSelectionScreen(selectedSports: _selectedSports));
@@ -75,14 +103,14 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
                     child: LinearProgressIndicator(
                       value: 0.25,
                       backgroundColor: Colors.grey[300],
-                      color: theme.colorScheme.primary,
-                      minHeight: 4,
+                      color: theme.colorScheme. primary,
+                      minHeight:  4,
                     ),
                   ),
                   SizedBox(width: getHorizontalSize(12)),
                   Text(
                     '1/4',
-                    style: theme.textTheme.bodyMedium?.copyWith(
+                    style: theme. textTheme.bodyMedium?.copyWith(
                       color: Colors.grey,
                     ),
                   ),
@@ -92,8 +120,8 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
 
             Expanded(
               child: SingleChildScrollView(
-                child: Padding(
-                  padding: getPadding(all: 20),
+                child:  Padding(
+                  padding:  getPadding(all: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -101,7 +129,7 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
                       Text(
                         "What's your sport?",
                         style: theme.textTheme.headlineLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
+                          fontWeight:  FontWeight.bold,
                         ),
                       ),
 
@@ -124,7 +152,7 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
                           crossAxisCount: 2,
                           crossAxisSpacing: getHorizontalSize(16),
                           mainAxisSpacing: getVerticalSize(16),
-                          childAspectRatio: 1.1,
+                          childAspectRatio:  1.1,
                         ),
                         itemCount: _sports.length,
                         itemBuilder: (context, index) {
@@ -141,7 +169,7 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
                                         .withOpacity(0.1)
                                     : Colors.white,
                                 borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
+                                border:  Border.all(
                                   color: isSelected
                                       ? theme.colorScheme.primary
                                       : Colors.grey[300]!,
@@ -161,10 +189,10 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
                                   // Icon
                                   Icon(
                                     sport['icon'],
-                                    size: getSize(48),
+                                    size:  getSize(48),
                                     color: isSelected
-                                        ? theme.colorScheme.primary
-                                        : Colors.grey[700],
+                                        ? theme.colorScheme. primary
+                                        : Colors. grey[700],
                                   ),
 
                                   SizedBox(height: getVerticalSize(12)),
@@ -174,13 +202,13 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
                                     sport['name'],
                                     style: theme.textTheme.bodyLarge?.copyWith(
                                       fontWeight: isSelected
-                                          ? FontWeight.bold
+                                          ?  FontWeight.bold
                                           : FontWeight.normal,
                                       color: isSelected
                                           ? theme.colorScheme.primary
                                           : Colors.black87,
                                     ),
-                                    textAlign: TextAlign.center,
+                                    textAlign:  TextAlign.center,
                                   ),
 
                                   // Checkmark
@@ -206,14 +234,14 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
 
             // Continue button
             Padding(
-              padding: getPadding(all: 20),
+              padding:  getPadding(all: 20),
               child: CustomElevatedButton(
                 height: getVerticalSize(54),
                 text: 'CONTINUE',
-                buttonStyle: CustomButtonStyles.fillPrimary,
+                buttonStyle: CustomButtonStyles. fillPrimary,
                 buttonTextStyle: CustomTextStyles
                     .bodyLargeUniformProExtraCondensedOnErrorContainer,
-                onTap: _continue,
+                onTap:  _continue,
               ),
             ),
           ],
