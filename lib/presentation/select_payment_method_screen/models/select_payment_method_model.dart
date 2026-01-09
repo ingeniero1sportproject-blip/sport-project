@@ -1,0 +1,10 @@
+/// This class defines the variables used in the [select_payment_method_screen],
+/// and is typically used to hold data that is passed between different parts of the application.
+class SelectPaymentMethodModel {
+
+  String? title;
+  String? icon;
+  int? id;
+  SelectPaymentMethodModel(this.title,this.icon,this.id);
+
+}
