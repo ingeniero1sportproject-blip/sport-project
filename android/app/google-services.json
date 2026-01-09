@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "400358892932",
+    "project_id": "rival-8e9e3",
+    "storage_bucket": "rival-8e9e3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:400358892932:android:3be3df1bdd54a2c089a9d1",
+        "android_client_info": {
+          "package_name": "com.rivalclub.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "400358892932-qsbj54cll4havdb0uatmen8pciq166su.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rivalclub.app",
+            "certificate_hash": "b8dafa163cd62f8d748db028d898a3cb32d07a37"
+          }
+        },
+        {
+          "client_id": "400358892932-s9bujjidn5c4g44eaifqvitf9kd6don4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACJtzxNGN4sgkCRvySLdqZeel7_xV8V-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "400358892932-s9bujjidn5c4g44eaifqvitf9kd6don4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

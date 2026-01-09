@@ -129,7 +129,7 @@ class _OnboardingOneScreenState extends State<OnboardingOneScreen> {
                                       PrefUtils.setIsIntro(false);
                                       Get.toNamed(
                                         AppRoutes
-                                            .loginFilledTabContainerScreen,
+                                            .firebaseLoginScreen,
                                       );
                                     }
                                         : () {
