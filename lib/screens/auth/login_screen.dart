@@ -93,19 +93,26 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final userCredential = await _authService.signInWithGoogle();
       
-      setState(() {
-        _isLoading = false;
-      });
-
       if (userCredential != null) {
+        // Always set loading to false before navigation
+        setState(() {
+          _isLoading = false;
+        });
+        
         Get.snackbar(
           'Success',
           'Signed in successfully',
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
+        
+        // Navigate to home screen
         Get.offAllNamed(AppRoutes.homeContainerScreen);
       } else {
+        setState(() {
+          _isLoading = false;
+        });
+        
         Get.snackbar(
           'Cancelled',
           'Google sign-in was cancelled',
@@ -134,19 +141,26 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final userCredential = await _authService.signInWithFacebook();
       
-      setState(() {
-        _isLoading = false;
-      });
-
       if (userCredential != null) {
+        // Always set loading to false before navigation
+        setState(() {
+          _isLoading = false;
+        });
+        
         Get.snackbar(
           'Success',
           'Signed in successfully',
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
+        
+        // Navigate to home screen
         Get.offAllNamed(AppRoutes.homeContainerScreen);
       } else {
+        setState(() {
+          _isLoading = false;
+        });
+        
         Get.snackbar(
           'Cancelled',
           'Facebook sign-in was cancelled',

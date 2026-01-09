@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -18,19 +19,34 @@ class FirestoreService {
   }) async {
     try {
       DocumentReference userDoc = usersCollection.doc(uid);
-      DocumentSnapshot doc = await userDoc.get();
+      
+      // Add timeout to prevent hanging
+      DocumentSnapshot doc = await userDoc.get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          debugPrint('Timeout getting user document for uid: $uid');
+          throw TimeoutException('Failed to get user document');
+        },
+      );
       
       if (doc.exists) {
-        // Update existing user
+        // Update existing user with timeout
         await userDoc.update({
           'lastLogin': FieldValue.serverTimestamp(),
           if (phoneNumber != null) 'phoneNumber': phoneNumber,
           if (email != null) 'email': email,
           if (displayName != null) 'displayName': displayName,
           if (photoURL != null) 'photoURL': photoURL,
-        });
+        }).timeout(
+          const Duration(seconds: 10),
+          onTimeout: () {
+            debugPrint('Timeout updating user document for uid: $uid');
+            throw TimeoutException('Failed to update user document');
+          },
+        );
+        debugPrint('Successfully updated user in Firestore: $uid');
       } else {
-        // Create new user
+        // Create new user with timeout
         await userDoc.set({
           'uid': uid,
           'phoneNumber': phoneNumber,
@@ -40,10 +56,17 @@ class FirestoreService {
           'provider': provider,
           'createdAt': FieldValue.serverTimestamp(),
           'lastLogin': FieldValue.serverTimestamp(),
-        });
+        }).timeout(
+          const Duration(seconds: 10),
+          onTimeout: () {
+            debugPrint('Timeout creating user document for uid: $uid');
+            throw TimeoutException('Failed to create user document');
+          },
+        );
+        debugPrint('Successfully created user in Firestore: $uid');
       }
     } catch (e) {
-      debugPrint('Error creating/updating user: $e');
+      debugPrint('Error creating/updating user in Firestore: $e');
       rethrow;
     }
   }
@@ -54,7 +77,14 @@ class FirestoreService {
       QuerySnapshot querySnapshot = await usersCollection
           .where('phoneNumber', isEqualTo: phoneNumber)
           .limit(1)
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              debugPrint('Timeout checking phone number: $phoneNumber');
+              throw TimeoutException('Failed to check phone number');
+            },
+          );
       
       return querySnapshot.docs.isNotEmpty;
     } catch (e) {
@@ -66,7 +96,13 @@ class FirestoreService {
   // Get user data
   Future<Map<String, dynamic>?> getUserData(String uid) async {
     try {
-      DocumentSnapshot doc = await usersCollection.doc(uid).get();
+      DocumentSnapshot doc = await usersCollection.doc(uid).get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          debugPrint('Timeout getting user data for uid: $uid');
+          throw TimeoutException('Failed to get user data');
+        },
+      );
       if (doc.exists) {
         return doc.data() as Map<String, dynamic>?;
       }
@@ -87,7 +123,13 @@ class FirestoreService {
       await usersCollection.doc(uid).update({
         if (displayName != null) 'displayName': displayName,
         if (photoURL != null) 'photoURL': photoURL,
-      });
+      }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          debugPrint('Timeout updating user profile for uid: $uid');
+          throw TimeoutException('Failed to update user profile');
+        },
+      );
     } catch (e) {
       debugPrint('Error updating user profile: $e');
       rethrow;
