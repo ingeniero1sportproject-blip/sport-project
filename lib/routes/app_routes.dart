@@ -50,6 +50,10 @@ import 'package:gym_app/presentation/confirm_payment_screen/confirm_payment_scre
 import 'package:gym_app/presentation/app_navigation_screen/app_navigation_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
+// Firebase Auth Screens
+import 'package:gym_app/screens/auth/login_screen.dart';
+import 'package:gym_app/screens/auth/otp_verification_screen.dart';
+
 import '../presentation/challenges_page/challenges_page.dart';
 import '../presentation/chest_gym_exercise_page/chest_gym_exercise_page.dart';
 import '../presentation/chest_home_exercise_page/chest_home_exercise_page.dart';
@@ -74,6 +78,11 @@ class AppRoutes {
   static const String onboardingThreeScreen = '/onboarding_three_screen';
 
   static const String loginPage = '/login_page';
+
+  // New Firebase Auth Login Screen
+  static const String firebaseLoginScreen = '/firebase_login_screen';
+
+  static const String otpVerificationScreen = '/otp_verification_screen';
 
   static const String loginErrorPage = '/login_error_page';
 
@@ -235,6 +244,8 @@ class AppRoutes {
         return getPage(SplashScreen(), settings);
       case AppRoutes.onboardingOneScreen:
         return getPage(OnboardingOneScreen(), settings);
+      case AppRoutes.firebaseLoginScreen:
+        return getPage(LoginScreen(), settings);
       case AppRoutes.loginFilledTabContainerScreen:
         return getPage(LoginFilledTabContainerScreen(), settings);
       case AppRoutes.forgotPasswordScreen:

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:gym_app/routes/app_routes.dart';
 import 'package:gym_app/theme/theme_helper.dart';
 
@@ -11,8 +12,16 @@ import 'localization/app_localization.dart';
 
 // import 'core/app_export.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Firebase
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    print('Firebase initialization error: $e');
+  }
+  
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((value) {
