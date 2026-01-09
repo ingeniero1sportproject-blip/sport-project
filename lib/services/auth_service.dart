@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
 import 'firestore_service.dart';
 
 class AuthService extends GetxService {
@@ -36,7 +37,18 @@ class AuthService extends GetxService {
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
           // Auto-verification (Android only)
-          await _auth.signInWithCredential(credential);
+          try {
+            UserCredential userCredential = await _auth.signInWithCredential(credential);
+            if (userCredential.user != null) {
+              await _firestoreService.createOrUpdateUser(
+                uid: userCredential.user!.uid,
+                phoneNumber: userCredential.user!.phoneNumber,
+                provider: 'phone',
+              );
+            }
+          } catch (e) {
+            debugPrint('Error in auto-verification: $e');
+          }
         },
         verificationFailed: (FirebaseAuthException e) {
           onError(e.message ?? 'Verification failed');
@@ -77,7 +89,7 @@ class AuthService extends GetxService {
       
       return userCredential;
     } catch (e) {
-      print('Error verifying OTP: $e');
+      debugPrint('Error verifying OTP: $e');
       return null;
     }
   }
@@ -118,7 +130,7 @@ class AuthService extends GetxService {
       
       return userCredential;
     } catch (e) {
-      print('Error signing in with Google: $e');
+      debugPrint('Error signing in with Google: $e');
       return null;
     }
   }
@@ -155,7 +167,7 @@ class AuthService extends GetxService {
       
       return userCredential;
     } catch (e) {
-      print('Error signing in with Facebook: $e');
+      debugPrint('Error signing in with Facebook: $e');
       return null;
     }
   }
@@ -167,7 +179,7 @@ class AuthService extends GetxService {
       await _googleSignIn.signOut();
       await FacebookAuth.instance.logOut();
     } catch (e) {
-      print('Error signing out: $e');
+      debugPrint('Error signing out: $e');
     }
   }
   

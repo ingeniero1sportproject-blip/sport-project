@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -42,7 +43,7 @@ class FirestoreService {
         });
       }
     } catch (e) {
-      print('Error creating/updating user: $e');
+      debugPrint('Error creating/updating user: $e');
       rethrow;
     }
   }
@@ -57,7 +58,7 @@ class FirestoreService {
       
       return querySnapshot.docs.isNotEmpty;
     } catch (e) {
-      print('Error checking phone number: $e');
+      debugPrint('Error checking phone number: $e');
       return false;
     }
   }
@@ -71,7 +72,7 @@ class FirestoreService {
       }
       return null;
     } catch (e) {
-      print('Error getting user data: $e');
+      debugPrint('Error getting user data: $e');
       return null;
     }
   }
@@ -88,7 +89,7 @@ class FirestoreService {
         if (photoURL != null) 'photoURL': photoURL,
       });
     } catch (e) {
-      print('Error updating user profile: $e');
+      debugPrint('Error updating user profile: $e');
       rethrow;
     }
   }
