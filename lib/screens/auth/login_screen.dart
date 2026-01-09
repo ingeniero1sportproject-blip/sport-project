@@ -106,7 +106,6 @@ class _LoginScreenState extends State<LoginScreen> {
           colorText: Colors.white,
         );
         
-        // Navigate to home screen
         Get.offAllNamed(AppRoutes.homeContainerScreen);
       } else {
         setState(() {
@@ -154,7 +153,6 @@ class _LoginScreenState extends State<LoginScreen> {
           colorText: Colors.white,
         );
         
-        // Navigate to home screen
         Get.offAllNamed(AppRoutes.homeContainerScreen);
       } else {
         setState(() {

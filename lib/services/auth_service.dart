@@ -50,7 +50,7 @@ class AuthService extends GetxService {
                 );
               } catch (e) {
                 // Log the error but don't fail the sign-in
-                debugPrint('Warning: Failed to save user to Firestore in auto-verification: $e');
+                debugPrint('Warning: Failed to save user to Firestore after phone auto-verification: $e');
               }
             }
           } catch (e) {
@@ -97,7 +97,7 @@ class AuthService extends GetxService {
           );
         } catch (e) {
           // Log the error but don't fail the sign-in
-          debugPrint('Warning: Failed to save user to Firestore, but sign-in succeeded: $e');
+          debugPrint('Warning: Failed to save user to Firestore after phone OTP verification, but sign-in succeeded: $e');
         }
       }
       
@@ -145,7 +145,7 @@ class AuthService extends GetxService {
           );
         } catch (e) {
           // Log the error but don't fail the sign-in
-          debugPrint('Warning: Failed to save user to Firestore, but sign-in succeeded: $e');
+          debugPrint('Warning: Failed to save user to Firestore after Google sign-in, but sign-in succeeded: $e');
         }
       }
       
@@ -189,7 +189,7 @@ class AuthService extends GetxService {
           );
         } catch (e) {
           // Log the error but don't fail the sign-in
-          debugPrint('Warning: Failed to save user to Firestore, but sign-in succeeded: $e');
+          debugPrint('Warning: Failed to save user to Firestore after Facebook sign-in, but sign-in succeeded: $e');
         }
       }
       
