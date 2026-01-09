@@ -39,12 +39,19 @@ class AuthService extends GetxService {
           // Auto-verification (Android only)
           try {
             UserCredential userCredential = await _auth.signInWithCredential(credential);
+            debugPrint('Phone auto-verification successful for user: ${userCredential.user?.uid}');
+            
             if (userCredential.user != null) {
-              await _firestoreService.createOrUpdateUser(
-                uid: userCredential.user!.uid,
-                phoneNumber: userCredential.user!.phoneNumber,
-                provider: 'phone',
-              );
+              try {
+                await _firestoreService.createOrUpdateUser(
+                  uid: userCredential.user!.uid,
+                  phoneNumber: userCredential.user!.phoneNumber,
+                  provider: 'phone',
+                );
+              } catch (e) {
+                // Log the error but don't fail the sign-in
+                debugPrint('Warning: Failed to save user to Firestore after phone auto-verification: $e');
+              }
             }
           } catch (e) {
             debugPrint('Error in auto-verification: $e');
@@ -78,13 +85,20 @@ class AuthService extends GetxService {
       
       UserCredential userCredential = await _auth.signInWithCredential(credential);
       
-      // Create or update user in Firestore
+      debugPrint('Phone OTP verification successful for user: ${userCredential.user?.uid}');
+      
+      // Create or update user in Firestore (don't block on this)
       if (userCredential.user != null) {
-        await _firestoreService.createOrUpdateUser(
-          uid: userCredential.user!.uid,
-          phoneNumber: userCredential.user!.phoneNumber,
-          provider: 'phone',
-        );
+        try {
+          await _firestoreService.createOrUpdateUser(
+            uid: userCredential.user!.uid,
+            phoneNumber: userCredential.user!.phoneNumber,
+            provider: 'phone',
+          );
+        } catch (e) {
+          // Log the error but don't fail the sign-in
+          debugPrint('Warning: Failed to save user to Firestore after phone OTP verification, but sign-in succeeded: $e');
+        }
       }
       
       return userCredential;
@@ -117,15 +131,22 @@ class AuthService extends GetxService {
       // Sign in to Firebase with the Google credential
       UserCredential userCredential = await _auth.signInWithCredential(credential);
       
-      // Create or update user in Firestore
+      debugPrint('Google Sign-In successful for user: ${userCredential.user?.uid}');
+      
+      // Create or update user in Firestore (don't block on this)
       if (userCredential.user != null) {
-        await _firestoreService.createOrUpdateUser(
-          uid: userCredential.user!.uid,
-          email: userCredential.user!.email,
-          displayName: userCredential.user!.displayName,
-          photoURL: userCredential.user!.photoURL,
-          provider: 'google',
-        );
+        try {
+          await _firestoreService.createOrUpdateUser(
+            uid: userCredential.user!.uid,
+            email: userCredential.user!.email,
+            displayName: userCredential.user!.displayName,
+            photoURL: userCredential.user!.photoURL,
+            provider: 'google',
+          );
+        } catch (e) {
+          // Log the error but don't fail the sign-in
+          debugPrint('Warning: Failed to save user to Firestore after Google sign-in, but sign-in succeeded: $e');
+        }
       }
       
       return userCredential;
@@ -154,15 +175,22 @@ class AuthService extends GetxService {
       UserCredential userCredential = 
           await _auth.signInWithCredential(facebookAuthCredential);
       
-      // Create or update user in Firestore
+      debugPrint('Facebook Sign-In successful for user: ${userCredential.user?.uid}');
+      
+      // Create or update user in Firestore (don't block on this)
       if (userCredential.user != null) {
-        await _firestoreService.createOrUpdateUser(
-          uid: userCredential.user!.uid,
-          email: userCredential.user!.email,
-          displayName: userCredential.user!.displayName,
-          photoURL: userCredential.user!.photoURL,
-          provider: 'facebook',
-        );
+        try {
+          await _firestoreService.createOrUpdateUser(
+            uid: userCredential.user!.uid,
+            email: userCredential.user!.email,
+            displayName: userCredential.user!.displayName,
+            photoURL: userCredential.user!.photoURL,
+            provider: 'facebook',
+          );
+        } catch (e) {
+          // Log the error but don't fail the sign-in
+          debugPrint('Warning: Failed to save user to Firestore after Facebook sign-in, but sign-in succeeded: $e');
+        }
       }
       
       return userCredential;
